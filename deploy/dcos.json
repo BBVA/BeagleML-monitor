@@ -1,0 +1,66 @@
+{
+  "id": "/beagleml",
+  "groups": [
+    {
+      "id": "/beagleml/mongo",
+      "apps": [
+         {
+           "id": "/beagleml/mongo/mongo",
+           "instances": 1,
+           "container": {
+             "type": "DOCKER",
+             "docker": { "image": "centos/mongodb-32-centos7@sha256:3a6588194d61d03b19401247b82405ef94a417efae0bfc21f67bf517a59b861d" },
+             "portMappings": [{ "containerPort": 27017, "hostPort": 0 }]
+           },
+         "env": {
+           "MONGODB_USER": "userS1H",
+           "MONGODB_PASSWORD": "14tHhw1FjcP42Xiy",
+           "MONGODB_DATABASE": "modeling",
+           "MONGODB_ADMIN_PASSWORD": "14tHhw1FjcP42Xiy"
+         }
+       }
+     ]
+    },{
+      "id": "/beagleml/kafka",
+      "apps": [
+        {
+          "id": "/beagleml/kafka/kafka",
+          "instances": 1,
+          "container": {
+            "type": "DOCKER",
+            "docker": { "image": "spotify/kafka@sha256:cf8f8f760b48a07fb99df24fab8201ec8b647634751e842b67103a25a388981b" },
+            "portMappings": [{ "containerPort": 9092, "hostPort": 0 }]
+          },
+        "env": {
+          "ADVERTISED_PORT": "9092",
+          "ADVERTISED_HOST": "kafka"
+        }
+        }
+      ]
+    },{
+      "id": "/beagleml/beagleml-monitor",
+      "dependencies": ["/beagleml/mongo","/beagleml/kafka"],
+      "apps": [
+        {S
+          "id": "/beagleml/beagleml-monitor/beagleml-monitor",
+          "instances": 1,
+          "container": {
+            "type": "DOCKER",
+            "docker": {"image": "bbvalabs/beagleml-monitor:1.0.0@sha256:d15cd578b5e35dfefc46ce2c156cca6e8b359e0b4b9fe5a55983b07cf4916abd" }
+          },
+          "env": {
+            "LOG_CONFIG_FILE": "logging.yaml",
+            "MAIN_TOPIC": "scheduler-monitor",
+            "KAFKA_SERVERS": "KAFKA_IP_OR_DNS",
+            "KAFKA_GROUP": "1",
+            "MONGO_URL": "MONGO_IP_OR_DNS",
+            "MONGODB_DATABASE": "modeling",
+            "MONGODB_USER": "userS1H",
+            "MONGODB_PASSWORD": "14tHhw1FjcP42Xiy",
+            "MONGO_PORT": "27017"
+          }
+        }
+      ]
+    }
+  ]
+}

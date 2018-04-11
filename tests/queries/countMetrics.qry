@@ -1,0 +1,12 @@
+db.experimentsMetrics.aggregate(
+    [
+        {
+            $match: {"name" : "2018122151104215138491FF-metrics"}
+        },
+        {
+            $project: {
+                count: { $size: "$metrics" }
+            }
+        }
+   ]
+)

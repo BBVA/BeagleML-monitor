@@ -1,0 +1,4 @@
+{"metrics": {"cost": 0.61571389, "precision": 0.68037283, "experimentTime": 25.361058712005615, "true_positives": 4964.0, "count": 110000.0, "false_positives": 2332.0, "accuarcy": 0.65636367, "false_negatives": 1448.0, "recall": 0.77417344, "time": 1513702599.5887284, "epochs": 110000.0}, "type": "metrics"}
+{"metrics": {"cost": 0.60854197, "precision": 0.68089539, "experimentTime": 26.52470874786377, "true_positives": 5232.0, "count": 115000.0, "false_positives": 2452.0, "accuarcy": 0.65791303, "false_negatives": 1482.0, "recall": 0.77926719, "time": 1513702600.7523794, "epochs": 115000.0}, "type": "metrics"}
+{"metrics": {"cost": 0.57189542, "precision": 0.68396509, "experimentTime": 42.94835138320923, "true_positives": 9094.0, "count": 185000.0, "false_positives": 4202.0, "accuarcy": 0.68118918, "false_negatives": 1696.0, "recall": 0.84281743, "time": 1513702617.1760187, "epochs": 185000.0}, "type": "metrics"}
+{"msg": "experiment_completed", "type": "service"}

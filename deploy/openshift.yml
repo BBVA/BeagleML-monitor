@@ -1,0 +1,114 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: beagleml-monitor
+  annotations:
+    description: "BeagleML metrics monitor."
+    tags: "beagleml"
+  labels:
+    app:  beagleml-monitor
+    template:  beagleml-monitor-template
+
+parameters:
+- name: NAMESPACE
+  description: "Openshift namespace to deploy into."
+  value: "modeling"
+  required: true
+- name: KAFKA_SERVERS
+  description: "Kafka Openshift service to use for modeling purposes."
+  value: kafka-persistent.common.svc
+  required: true
+- name: MAIN_TOPIC
+  description: "Kafka topic to use for modeling purposes."
+  value: scheduler-monitor
+  required: true
+- name: KAFKA_GROUP
+  description: "No clue why this is a configurable parameter."
+  value: '1'
+  required: true
+- name: MONGO_URL
+  description: "Openshift MongoDB service to access"
+  value: mongodb.common.svc
+  required: true
+- name: MONGO_PORT
+  value: '27017'
+  required: true
+- name: MONGODB_DATABASE
+  value: sampledb
+  required: true
+- name: MONGODB_USER
+  value: userS1H
+  required: true
+- name: MONGODB_PASSWORD
+  value: 14tHhw1FjcP42Xiy
+  required: true
+- name: CPU_REQUEST
+  description: "Minimum cpu requested"
+  value: "1"
+  required: true
+- name: CPU_LIMIT
+  description: "Maximum cpu requested"
+  value: "2"
+  required: true
+- name: MEM_REQUEST
+  description: "Minimum memory requested"
+  value: 512Mi
+  required: true
+- name: MEM_LIMIT
+  description: "Maximum memory requested"
+  value: 1024Mi
+  required: true
+
+objects:
+
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      name: beagleml-monitor
+      namespace: ${NAMESPACE}
+      labels:
+        app: beagleml-monitor
+    spec:
+      triggers:
+        - type: ConfigChange
+      replicas: 1
+      selector:
+        app: beagleml-monitor
+        deploymentconfig: beagleml-monitor-dep
+      template:
+        metadata:
+          labels:
+            app: beagleml-monitor
+            deploymentconfig: beagleml-monitor-dep
+        spec:
+          containers:
+          - name: beagleml-monitor
+            env:
+              - name: LOG_CONFIG_FILE
+                value: logging.yaml
+              - name: MAIN_TOPIC
+                value: "${MAIN_TOPIC}"
+              - name: KAFKA_SERVERS
+                value: "${KAFKA_SERVERS}"
+              - name: KAFKA_GROUP
+                value: "${KAFKA_GROUP}"
+              - name: MONGO_URL
+                value: "${MONGO_URL}"
+              - name: MONGODB_DATABASE
+                value: "${MONGODB_DATABASE}"
+              - name: MONGODB_USER
+                value: "${MONGODB_USER}"
+              - name: MONGODB_PASSWORD
+                value: "${MONGODB_PASSWORD}"
+              - name: MONGO_PORT
+                value: "${MONGO_PORT}"
+            image: bbvalabs/beagleml-monitor:1.0.0@sha256:d15cd578b5e35dfefc46ce2c156cca6e8b359e0b4b9fe5a55983b07cf4916abd
+            command:
+              - ./start.sh
+            resources:
+              requests:
+                cpu: ${CPU_REQUEST}
+                memory: ${MEM_REQUEST}
+              limits:
+                cpu: ${CPU_LIMIT}
+                memory: ${MEM_LIMIT}

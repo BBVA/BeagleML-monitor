@@ -1,0 +1,31 @@
+version: "2"
+
+services:
+  mongo:
+    image: centos/mongodb-32-centos7@sha256:3a6588194d61d03b19401247b82405ef94a417efae0bfc21f67bf517a59b861d
+    environment:
+      - MONGODB_USER=userS1H
+      - MONGODB_PASSWORD=14tHhw1FjcP42Xiy
+      - MONGODB_DATABASE=modeling
+      - MONGODB_ADMIN_PASSWORD=14tHhw1FjcP42Xiy
+    networks:
+      - beagleml
+    ports:
+      - "27017:27017"
+    volumes:
+      - ${PWD}/mongo_storage:/var/lib/mongodb
+
+  kafka:
+    image: spotify/kafka
+    environment:
+      - ADVERTISED_PORT=9092
+      - ADVERTISED_HOST=kafka
+    networks:
+      - beagleml
+    ports:
+      - "2181:2181"
+      - "9092:9092"
+      
+networks:
+  beagleml:
+    driver: bridge
